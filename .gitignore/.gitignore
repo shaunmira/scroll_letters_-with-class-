@@ -1,0 +1,180 @@
+from Tkinter import *
+from random import shuffle
+
+tk = Tk()
+tk.geometry('500x300')
+tk.focus_set()
+
+word = list('school')
+word_original = list(word)
+shuffle(word)
+
+letters = {'alpha': -1, 'beta': -1} 
+caps = False
+
+class Anagram:
+    global canvas
+    word = list('school')
+    word_original = list(word)
+    shuffle(word)
+    letters = {'alpha': -1, 'beta': -1} 
+    caps = False
+
+    def __init__(self):
+        pass
+
+    def check():
+        pointer = ''
+        for i in range(min(self.letters.values()), max(self.letters.values())) + [max(self.letters.values())]:
+            if self.word[i].lower() == self.word_original[i]:
+                pointer = pointer + '*'
+        if all(self.word_original[i] == j for i,j in enumerate(self.word)):
+            pointer = '!'
+        canvas.itemconfigure(text2, text=pointer)   
+        
+    def rotate(event):
+        new_list = []
+        old_list_left = []
+        old_list_right = []
+    
+
+        if self.letters['alpha'] == -1:
+            return
+    
+        if min(self.letters.values()) > 0:
+            for i in range(min(self.letters.values())):
+                old_list_left.append(word[i])
+
+        for i in range(min(self.letters.values()), max(self.letters.values())) + [max(self.letters.values())]:
+            new_list.append(self.word[i])        
+
+        if max(self.letters.values()) < len(self.word)-1:
+            for i in range(max(self.letters.values())+1, len(self.word)):
+                old_list_right.append(self.word[i])
+
+        if self.letters['alpha'] < self.letters['beta']:
+            new_list.insert(0, new_list.pop())
+        elif self.letters['beta'] < self.letters['alpha']:
+           new_list.append(new_list.pop(0))
+        self.word = old_list_left + new_list + old_list_right
+        canvas.itemconfigure(text1, text=word)
+        check()
+ 
+    def clear(event):
+    
+        for i in range(0, len(self.word)):
+            self.word[i] = self.word[i].lower()
+        canvas.itemconfigure(text1, text=self.word)
+    
+        self.letters['alpha'] = -1
+        self.letters['beta'] = self.letters['alpha']
+        self.caps = False
+        check()
+
+    def move(self, event):
+    
+        if self.caps == True:
+
+            for i in range(min(self.letters.values()), max(self.letters.values())) + [max(self.letters.values())]:
+                self.word[i] = self.word[i].lower()  
+
+            if self.keysym == 'Right':
+                if self.letters['beta'] <= self.letters['alpha']:
+                    self.letters['alpha'] = self.letters['alpha'] + 1
+                else:
+                    self.letters['alpha'] = self.letters['beta'] + 1
+                if max(self.letters.values()) > len(self.word)-1:
+                    self.letters[max(self.letters, key=lambda j: self.letters[j])] = len(self.word) - 1
+
+            if self.event.keysym == 'Left':
+                if self.letters['alpha'] <= self.letters['beta']:
+                    self.letters['alpha'] = self.letters['alpha'] - 1
+                else:
+                    self.letters['alpha'] = self.letters['beta'] - 1
+                if min(self.letters.values()) < 0:
+                    self.letters[min(self.letters, key=lambda j: letters[j])] = 0
+
+            self.letters['beta'] = self.letters['alpha']  
+            self.word[self.letters['alpha']] = self.word[self.letters['alpha']].upper()
+            canvas.itemconfigure(text1, text=word)
+
+        if self.caps == False:
+
+            self.letters['gamma'] = self.letters['alpha']
+
+            if self.event.keysym == 'Right':
+                self.letters['alpha'] = self.letters['alpha'] + 1
+                if self.letters['alpha'] > len(self.word)-1:
+                    self.letters['alpha'] = 0
+
+            if self.event.keysym == 'Left':
+                self.letters['alpha'] = self.letters['alpha'] - 1
+                if self.letters['alpha'] < 0:
+                    self.letters['alpha'] = len(self.word)-1
+              
+            self.word[self.letters['gamma']] = self.word[self.letters['gamma']].lower() 
+            del self.letters['gamma'] 
+            self.word[self.letters['alpha']] = self.word[self.letters['alpha']].upper()
+            canvas.itemconfigure(text1, text=word)
+            self.letters['beta'] = self.letters['alpha']
+        
+        self.caps = False
+        check()
+
+    def capitalize(self, event):
+       
+        self.caps = True
+
+        if self.event.keysym == 'Left':
+
+            if self.letters['alpha'] == -1:
+                self.letters['alpha'] = len(self.word) - 1
+                self.letters['beta'] = self.letters['alpha']
+                self.word[self.letters['alpha']] = self.word[self.letters['alpha']].upper()
+                canvas.itemconfigure(text1, text=word)
+            elif self.letters['beta'] == self.letters['alpha']:
+                self.letters['beta'] = self.letters['alpha'] - 1
+            elif self.letters['beta'] != self.letters['alpha']:
+                if self.word[self.letters['beta']].isupper():
+                    self.word[self.letters['beta']] = self.word[self.letters['beta']].lower()
+                self.letters['beta'] = self.letters['beta'] - 1
+
+            if self.letters['beta'] < 0:
+                 self.letters['beta'] = 0
+       
+        if self.event.keysym == 'Right':
+        
+            if self.letters['alpha'] == -1:
+                self.letters['alpha'] = 0
+                self.letters['beta'] = self.letters['alpha']
+                self.word[self.letters['alpha']] = self.word[self.letters['alpha']].upper()
+            elif self.letters['beta'] == self.letters['alpha']:
+                self.letters['beta'] = self.letters['alpha'] + 1
+            elif self.letters['beta'] != self.letters['alpha']:
+                if self.word[self.letters['beta']].isupper():
+                    self.word[self.letters['beta']] = self.word[self.letters['beta']].lower()
+                self.letters['beta'] = self.letters['beta'] + 1
+        
+            if self.letters['beta'] > len(self.word)-1:
+                self.letters['beta'] = len(self.word)-1
+
+        for i in range(min(self.letters.values()), max(self.letters.values())) + [max(self.letters.values())]:
+            self.word[i] = self.word[i].upper()
+ 
+        canvas.itemconfigure(text1, text=word)
+        print self.letters
+        check()
+
+canvas = Canvas(tk)
+canvas.pack(expand=YES, fill=BOTH)
+text1 = canvas.create_text(250, 150, text=word, font=('helvetica', 32))
+text2 = canvas.create_text(250, 50, font=('helvetica', 32))
+
+tk.bind('<Left>', Anagram.move)
+tk.bind('<Right>', Anagram.move)
+tk.bind('<Shift-Left>', Anagram.capitalize)
+tk.bind('<Shift-Right>', Anagram.capitalize)
+tk.bind('<Escape>', Anagram.clear)
+tk.bind('<Return>', Anagram.rotate)
+
+tk.mainloop()
