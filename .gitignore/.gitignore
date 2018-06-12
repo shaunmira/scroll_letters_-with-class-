@@ -1,14 +1,105 @@
 from Tkinter import *
-from random import shuffle
+from random import randint, shuffle
+
+tk = Tk()
+tk.geometry('500x300')
+tk.focus_set()
+
+words = 'purple orange family twelve silver thirty donate people future heaven \
+         banana office nature eleven twenty snitch father yellow poetry broken \
+         potato circle school breath moment circus person scarce energy sister \
+         spring change monkey system secret pirate ninety mother winter bucket \
+         doctor strong forest joyful memory season ending cookie silent talent \
+         turkey better bottle wonder happen number little spirit melody lovely \
+         ginger cousin couple bridge tomato enough dragon lonely market beauty \
+         simple legend pepper famous oxygen hunter wisdom summer period branch \
+         donkey chance autumn bubble nation clever camera flower action wealth \
+         window coffee choice muffin prince throne league insect ground pretty \
+         safety sponge lounge mirror artist riddle pickle violet temple bakery \
+         rodent murder hungry island soccer babies public church waffle matter \
+         stress police bright bullet before castle guitar picnic garden travel \
+         finger always killer cactus cherry savage second jungle smelly prison \
+         shadow shiver carpet peanut around object united colors linked casino \
+         dinner option please modern zombie puzzle tender cringe vision driver \
+         corner target center crisis wallet poison liquid desert cheese double \
+         lotion minute bounce reason volume rocket unique golden battle warmth \
+         potion colony engine pencil ticket string square triple hockey galaxy \
+         meadow empire inside single master lesson genius garlic figure random \
+         misery leader fourth pieces dimple fringe eighty cuddle motion celery \
+         sorrow auburn badger autism ghetto sanity rhythm sports honest violin \
+         movies pillow plenty junior burden cowboy street appear rising narrow \
+         desire slogan heroin legacy acting region noodle danger trophy planet \
+         social bottom lyrics litter carrot boxing needle tyrant willow parrot \
+         credit knight pocket course frozen wicked worker hatred cereal forget \
+         valley status hobbit senate rapper safari giggle author avenge debate \
+         easily design record arctic museum wizard palace escape filter shield \
+         cinema tennis mobile sketch common rabbit oracle access nobody asking \
+         helper candle attack quotes become racing jacket payday kitten flight \
+         groove effect smooth closer dollar county muscle fallen active caring \
+         ballet supper horses discus subway accent relief linear myself orphan \
+         clover mirage player origin carbon marble cannon karate ripple coming \
+         famine skinny scared charge advice breast wasted polish estate jaguar \
+         bitter winner tucker bother scheme signal reward wreath parade turner \
+         racism sunset female plants saliva hustle solace arrive fierce barrel \
+         trivia behave adverb senior doodle aspect mental arrest really weight \
+         spider crayon bowtie return caused chilly breeze strike cougar switch \
+         cruise damage absent basket sniper cotton sleigh scream locker tickle \
+         runner wobble beaker kidney wisely ladder recall casual height budget \
+         roster terror menace cooler method citrus hornet shower artery insane \
+         campus guilty tissue borrow fiance fridge canopy dagger though walrus \
+         sedate handle hidden bishop canvas abound socket asylum beetle gloomy \
+         plunge finish denial answer recess speech copper sonata tongue comedy \
+         plough afraid affect clutch foster armory brunch minion plasma studio \
+         vacuum theory praise factor fluffy fiddle fusion sprout basics follow \
+         farmer notice oyster pebble worthy rubber smarty horror bandit prayer \
+         hollow heater legion purity feeder softly awhile coffin iguana native \
+         priest vanity nickel bikini crutch senses pantry nephew puppet mortal \
+         thirst iconic bamboo voting lately launch middle dental having eraser \
+         edible indeed napkin duster cattle letter helmet listen joyous asleep \
+         garage sodium voyage powder aerial humble tablet infant gender diesel \
+         rascal tenant aboard bodies buster facade weasel policy avenue blight \
+         boring podium lavish cradle strife wrench beater poster dating steady \
+         magnet brandy potter motive reaper closet abroad canyon ravine ethics \
+         stream coward ribbon ailing caught orally anchor bisect riding effort \
+         recipe slater gossip growth stairs arcane cavity hazard parent solver \
+         felony mammal admire errand sphere thanks cement coyote vacate either \
+         impact undone member chrome threat demons bundle marker robber albino \
+         goblin lagoon fisher excuse casket income luxury mosque pastry hybrid \
+         radish pollen phobia behind bangle resist decade attain enigma raffle \
+         baboon agenda washer weaver almond temper shovel regret tunnel fright \
+         rowing barley hunger anthem strain client racket vessel parlor across \
+         tattoo bellow agency salmon angels retail crater sacred entity burned \
+         dearly orator mellow camper injury failed demise psycho cicada antler \
+         driven afford chains flavor asthma pulled squash dealer report bruise \
+         reject mayhem rubble ruined within belief sprint bought events chaser \
+         diaper cloudy normal buckle loudly finale beyond sweaty lawyer trendy \
+         butler mature series warmer reveal barber sneeze retina symbol fabric \
+         called remedy intent settle falcon anyway cuddly deadly possum emblem \
+         almost seaman canary chubby retell hardly dreary cocoon wanted ponder \
+         gutter stinky virtue beggar jumper sloppy portal crotch evolve spouse \
+         limits cosmic lively bigger singer fungus voices ladies frosty sailor \
+         shrimp jiggle domain gospel mumble dainty riches babble stolen ascent \
+         comics laptop absorb icicle lifted addict excess grease makeup staple \
+         fumble advent creepy buried curfew meteor pledge tragic excite stormy \
+         medium feeble abused malice repeat should atomic beacon racist matrix \
+         hammer throat median hyphen forces fester floral chorus paddle hearts \
+         python trauma healer defeat greasy equate fondle linger salute clinic \
+         keeper patent cheque resort clause rumble prefix device crispy enzyme \
+         corpse mantra static safely pistol glance filthy sizzle outfit toffee \
+         binary washed huddle choose nugget shared wishes spooky walker insult \
+         poetic piracy runway jewels nibble radius career clocks clumsy sleeve \
+         roller gentle affair arcade sharks duties plague visual antics lizard \
+         supply review fellow groovy botany'.split()
 
 class Anagram:
-    word = list('school')
+    global words
+    word = list(words[randint(0, len(words)-1)])                        
     word_original = list(word)
     shuffle(word)
     letters = {'alpha': -1, 'beta': -1} 
     caps = False
-
-
+    _sum = 0
+      
     def __init__(self):
         tk.bind('<Left>', self.move)
         tk.bind('<Right>', self.move)
@@ -21,21 +112,37 @@ class Anagram:
         self.canvas.pack(expand=YES, fill=BOTH)
         self.text1 = self.canvas.create_text(250, 150, text=self.word, font=('helvetica', 32))
         self.text2 = self.canvas.create_text(250, 50, font=('helvetica', 32))
+        self.text3 = self.canvas.create_text(450, 50, font=('helvetica', 32)) 
 
-           
-    def check(self, event=None):
+        self.measure()
+
+
+    def measure(self):
+        word_original = list(self.word_original)
+        word = list(self.word)
+
+        while word_original != []: 
+            i = word_original[0]
+            self._sum = word.index(i) + self._sum
+            word_original.pop(0)
+            word.pop(word.index(i))
+
+        self.canvas.itemconfigure(self.text3, text=self._sum)
+
+                
+    def check(self):
         pointer = ''
+
         for i in range(min(self.letters.values()), max(self.letters.values())) + [max(self.letters.values())]:
             if self.word[i].lower() == self.word_original[i]:
                 pointer = pointer + '*'
         if all(self.word_original[i] == j for i,j in enumerate(self.word)):
             pointer = '!'
+
         self.canvas.itemconfigure(self.text2, text=pointer)
+      
 
-        print self.letters
-        
-
-    def rotate(self, event=None):
+    def rotate(self, event):
         new_list = []
         old_list_left = []
         old_list_right = []
@@ -60,10 +167,13 @@ class Anagram:
            new_list.append(new_list.pop(0))
         self.word = old_list_left + new_list + old_list_right
         self.canvas.itemconfigure(self.text1, text=self.word)
+
+        self._sum = self._sum - 1
+        self.canvas.itemconfigure(self.text3, text=self._sum)
         self.check()
  
 
-    def clear(self, event=None):
+    def clear(self, event):
 
         for i in range(0, len(self.word)):
             self.word[i] = self.word[i].lower()
@@ -75,7 +185,7 @@ class Anagram:
         self.check()
 
 
-    def move(self, event=None):
+    def move(self, event):
    
         if self.caps == True:
 
@@ -125,7 +235,7 @@ class Anagram:
         self.caps = False
         self.check()
 
-    def capitalize(self, event=None):
+    def capitalize(self, event):
        
         self.caps = True
 
@@ -166,13 +276,10 @@ class Anagram:
             self.word[i] = self.word[i].upper()
  
         self.canvas.itemconfigure(self.text1, text=self.word)
-        print self.letters
         self.check()
-
-tk = Tk()
-tk.geometry('500x300')
-tk.focus_set()
-    
+  
 anagram = Anagram()
+
+tk.mainloop()
 
 tk.mainloop()
