@@ -115,7 +115,7 @@ class Anagram:
         self.canvas = Canvas(tk)
         self.canvas.pack(expand=YES, fill=BOTH)
         self.text1 = self.canvas.create_text(250, 150, text=self.word, font=('Fixedsys', 32))
-        self.text2 = self.canvas.create_text(250, 50, font=('Fixedsys', 32))
+        self.text2 = self.canvas.create_text(250, 100, font=('Fixedsys', 32))
         self.text3 = self.canvas.create_text(450, 50, font=('Fixedsys', 32))
                          
         self.measure()
@@ -135,11 +135,14 @@ class Anagram:
 
                 
     def check(self):
-        pointer = ''
-
+        pointer = []
+        for i in self.word:
+            pointer.append(u'\u00a0')
+                
         for i in range(min(self.letters.values()), max(self.letters.values())) + [max(self.letters.values())]:
             if self.word[i].lower() == self.word_original[i]:
-                pointer = pointer + '*'
+                pointer.pop(i)
+                pointer.insert(i, '*')
         if all(self.word_original[i] == j for i,j in enumerate(self.word)):
             pointer = '!'
 
@@ -176,8 +179,6 @@ class Anagram:
         self.canvas.itemconfigure(self.text3, text=self._sum)
         self.check()
 
-        print self.letters
- 
 
     def clear(self, event):
         i = iter(list(self.word))
@@ -255,8 +256,6 @@ class Anagram:
             self.letters['beta'] = self.letters['alpha']
         
         self.caps = False
-
-        print self.letters
         
         self.check()
 
@@ -301,8 +300,6 @@ class Anagram:
             self.word[i] = self.word[i].upper()
  
         self.canvas.itemconfigure(self.text1, text=self.word)
-
-        print self.letters
 
         self.check()
   
