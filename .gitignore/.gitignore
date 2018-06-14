@@ -93,9 +93,9 @@ words = 'purple orange family twelve silver thirty donate people future heaven \
 
 class Anagram:
     global words
-    word = list(words[randint(0, len(words)-1)])                        
-    word_original = list(word)
-    shuffle(word)
+    #word = list(words[randint(0, len(words)-1)])                        
+    #word_original = list(word)
+    #shuffle(word)
     letters = {'alpha': -1, 'beta': -1} 
     caps = False
     _sum = 0
@@ -108,12 +108,16 @@ class Anagram:
         tk.bind('<Escape>', self.clear)
         tk.bind('<Return>', self.rotate)
 
+        self.word = list(words[randint(0, len(words)-1)])
+        self.word_original = list(self.word)
+        shuffle(self.word)
+
         self.canvas = Canvas(tk)
         self.canvas.pack(expand=YES, fill=BOTH)
-        self.text1 = self.canvas.create_text(250, 150, text=self.word, font=('helvetica', 32))
-        self.text2 = self.canvas.create_text(250, 50, font=('helvetica', 32))
-        self.text3 = self.canvas.create_text(450, 50, font=('helvetica', 32)) 
-
+        self.text1 = self.canvas.create_text(250, 150, text=self.word, font=('Fixedsys', 32))
+        self.text2 = self.canvas.create_text(250, 50, font=('Fixedsys', 32))
+        self.text3 = self.canvas.create_text(450, 50, font=('Fixedsys', 32))
+                         
         self.measure()
 
 
@@ -171,9 +175,27 @@ class Anagram:
         self._sum = self._sum - 1
         self.canvas.itemconfigure(self.text3, text=self._sum)
         self.check()
+
+        print self.letters
  
 
     def clear(self, event):
+        i = iter(list(self.word))
+        j = 0
+
+        while True:
+            try:
+                if next(i).islower():
+                    j = j + 1
+                else:
+                    break
+            except StopIteration:
+                break
+
+        if j == len(self.word):
+            self.canvas.destroy()
+            anagram = Anagram()
+            return
 
         for i in range(0, len(self.word)):
             self.word[i] = self.word[i].lower()
@@ -233,6 +255,9 @@ class Anagram:
             self.letters['beta'] = self.letters['alpha']
         
         self.caps = False
+
+        print self.letters
+        
         self.check()
 
     def capitalize(self, event):
@@ -276,10 +301,11 @@ class Anagram:
             self.word[i] = self.word[i].upper()
  
         self.canvas.itemconfigure(self.text1, text=self.word)
+
+        print self.letters
+
         self.check()
   
 anagram = Anagram()
-
-tk.mainloop()
 
 tk.mainloop()
